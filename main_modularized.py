@@ -13,7 +13,7 @@ def get_sorted_directories(directory):
 def extract_and_rename_folder(directory, folder_name, separator, numeric_prefix_counter):
     """
     Extracts information from the folder name, generates a new name with a numeric prefix,
-    and renames the folder.
+    capitalizes the first character, and renames the folder.
     """
     folder_path = os.path.join(directory, folder_name)
     # Find the index of the separator character
@@ -22,6 +22,9 @@ def extract_and_rename_folder(directory, folder_name, separator, numeric_prefix_
         numeric_prefix_counter += 1
         # Extract the substring after the separator
         new_name = folder_name[index + 1 :].strip()
+
+        # Capitalize the first character
+        new_name = new_name.capitalize()
 
         # Create the new folder name with a numeric prefix
         numeric_prefix = f"{numeric_prefix_counter:02d} - "
@@ -37,19 +40,19 @@ def extract_and_rename_folder(directory, folder_name, separator, numeric_prefix_
     return numeric_prefix_counter
 
 
-def rename_folders(directory, separator="-"):
+def rename_folders_recursive(directory, separator="-"):
     """
-    Rename folders in the given directory using a numeric prefix.
+    Rename folders in the given directory and its subdirectories using a numeric prefix.
     """
-    numeric_prefix_counter = 0
-    directories = get_sorted_directories(directory)
-
-    for folder_name in directories:
-        numeric_prefix_counter = extract_and_rename_folder(
-            directory, folder_name, separator, numeric_prefix_counter
-        )
+    for root, _, files in os.walk(directory):
+        numeric_prefix_counter = 0  # Reset the counter for each new directory
+        # Only process directories
+        for folder_name in get_sorted_directories(root):
+            numeric_prefix_counter = extract_and_rename_folder(
+                root, folder_name, separator, numeric_prefix_counter
+            )
 
 
 # Replace 'D:\\VSCode\\AssignNumbersToFolders' with your actual directory path
-directory_path = r"path\to\folders"
-rename_folders(directory_path)
+directory_path = r"D:\VSCode\PowerShell-TODO"
+rename_folders_recursive(directory_path)
