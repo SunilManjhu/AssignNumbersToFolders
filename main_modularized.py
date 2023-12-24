@@ -1,12 +1,17 @@
 import os
+import re
 
+def natural_sort_key(s):
+    return [int(text) if text.isdigit() else text.lower()
+            for text in re.split('([0-9]+)', s)]
 
 def get_sorted_directories(directory):
     """
     Get a sorted list of directories in the given directory.
     """
     return sorted(
-        [d for d in os.listdir(directory) if os.path.isdir(os.path.join(directory, d))]
+        [d for d in os.listdir(directory) if os.path.isdir(os.path.join(directory, d))],
+        key=natural_sort_key
     )
 
 
@@ -54,5 +59,5 @@ def rename_folders_recursive(directory, separator="-"):
 
 
 # Replace 'D:\\VSCode\\AssignNumbersToFolders' with your actual directory path
-directory_path = r"D:\VSCode\AssignNumbersToFolders"
+directory_path = r"D:\VSCode\PowerShell-TODO"
 rename_folders_recursive(directory_path)
