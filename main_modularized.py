@@ -54,5 +54,5 @@ def rename_folders_recursive(directory, separator="-"):
 
 
 # Replace 'D:\\VSCode\\AssignNumbersToFolders' with your actual directory path
-directory_path = r"D:\VSCode\PowerShell-TODO"
+directory_path = r"D:\VSCode\AssignNumbersToFolders"
 rename_folders_recursive(directory_path)
