@@ -5,59 +5,65 @@ def natural_sort_key(s):
     return [int(text) if text.isdigit() else text.lower()
             for text in re.split('([0-9]+)', s)]
 
-def get_sorted_directories(directory):
+def get_sorted_items(directory, is_folder=True):
     """
-    Get a sorted list of directories in the given directory.
+    Get a sorted list of items (folders or files) in the given directory.
     """
     return sorted(
-        [d for d in os.listdir(directory) if os.path.isdir(os.path.join(directory, d))],
+        [item for item in os.listdir(directory) if (is_folder and os.path.isdir(os.path.join(directory, item))) or (not is_folder and os.path.isfile(os.path.join(directory, item)))],
         key=natural_sort_key
     )
 
 
-def extract_and_rename_folder(directory, folder_name, separator, numeric_prefix_counter):
+def extract_and_rename_item(directory, item_name, separator, numeric_prefix_counter, is_folder=True):
     """
-    Extracts information from the folder name, generates a new name with a numeric prefix,
-    capitalizes the first character, and renames the folder.
+    Extracts information from the item name, generates a new name with a numeric prefix,
+    capitalizes the first character, and renames the item.
     """
-    folder_path = os.path.join(directory, folder_name)
+    item_path = os.path.join(directory, item_name)
     # Find the index of the separator character
-    index = folder_name.find(separator)
+    index = item_name.find(separator)
     if index != -1:
         numeric_prefix_counter += 1
         # Extract the substring after the separator
-        new_name = folder_name[index + 1 :].strip()
+        new_name = item_name[index + 1 :].strip()
 
         # Capitalize the first character
         new_name = new_name.capitalize()
 
-        # Create the new folder name with a numeric prefix
+        # Create the new item name with a numeric prefix
         numeric_prefix = f"{numeric_prefix_counter:02d} - "
         new_name_with_prefix = numeric_prefix + new_name
 
-        # Create the new path with the updated folder name
+        # Create the new path with the updated item name
         new_path = os.path.join(directory, new_name_with_prefix)
 
-        # Rename the folder
-        os.rename(folder_path, new_path)
-        print(f"Renamed: {folder_path} -> {new_path}")
+        # Rename the item
+        os.rename(item_path, new_path)
+        print(f"Renamed: {item_path} -> {new_path}")
 
     return numeric_prefix_counter
 
 
-def rename_folders_recursive(directory, separator="-"):
+def rename_items_recursive(directory, separator="-", is_folder=True):
     """
-    Rename folders in the given directory and its subdirectories using a numeric prefix.
+    Rename items (folders or files) in the given directory and its subdirectories using a numeric prefix.
     """
-    for root, _, files in os.walk(directory):
+    for root, _, items in os.walk(directory):
         numeric_prefix_counter = 0  # Reset the counter for each new directory
-        # Only process directories
-        for folder_name in get_sorted_directories(root):
-            numeric_prefix_counter = extract_and_rename_folder(
-                root, folder_name, separator, numeric_prefix_counter
+        # Only process items (folders or files)
+        for item_name in get_sorted_items(root, is_folder):
+            numeric_prefix_counter = extract_and_rename_item(
+                root, item_name, separator, numeric_prefix_counter, is_folder
             )
 
 
 # Replace 'D:\\VSCode\\AssignNumbersToFolders' with your actual directory path
-directory_path = r"D:\VSCode\AssignNumbersToFolders"
-rename_folders_recursive(directory_path)
+directory_path = r"D:\\VSCode\\AssignNumbersToFolders"
+										
+
+# Rename folders
+rename_items_recursive(directory_path, is_folder=True)
+
+# Rename files
+rename_items_recursive(directory_path, is_folder=False)
