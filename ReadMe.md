@@ -40,14 +40,14 @@ The program has been modularized for better readability and maintainability. Key
 Suppose you have the following folders:
 
     01 - First Folder
-    02 - Second Folder
+    1.1 - Second Folder
     03 - Third Folder
 
 
 After running the script, the folders will be renamed with numeric prefixes:
 
     01 - First Folder -> 01 - First Folder
-    02 - Second Folder -> 02 - Second Folder
+    1.1 - Second Folder -> 02 - Second Folder
     03 - Third Folder -> 03 - Third Folder
 
 
