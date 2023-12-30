@@ -39,8 +39,14 @@ def extract_and_rename_item(directory, item_name, separator, numeric_prefix_coun
         new_path = os.path.join(directory, new_name_with_prefix)
 
         # Rename the item
-        os.rename(item_path, new_path)
-        print(f"Renamed: {item_path} -> {new_path}")
+        # Check if the new path already exists
+        if not os.path.exists(new_path):
+            # Rename the item
+            os.rename(item_path, new_path)
+            print(f"Renamed: {item_path} -> {new_path}")
+        else:
+            print(f"Skipped renaming, path already exists: {new_path}")
+
 
     return numeric_prefix_counter
 
@@ -59,7 +65,7 @@ def rename_items_recursive(directory, separator="-", is_folder=True):
 
 
 # Replace 'D:\\VSCode\\AssignNumbersToFolders' with your actual directory path
-directory_path = r"D:\\VSCode\\AssignNumbersToFolders"
+directory_path = r"/path/to/your/directory"
 										
 
 # Rename folders
